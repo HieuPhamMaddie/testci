@@ -9,7 +9,8 @@ jobs:
       - checkout
       - docker/check
       - docker/build:
-          image: hieuphamdn93/nodetest:latest
+          image: hieuphamdn93/nodetest
+          tag: latest
       - docker/push:
           digest-path: /tmp/digest.txt
           image: my_repo/orb-test
