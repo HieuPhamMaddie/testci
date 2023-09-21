@@ -13,7 +13,7 @@ jobs:
           tag: latest
       - docker/push:
           digest-path: /tmp/digest.txt
-          image: my_repo/orb-test
+          image: hieuphamdn93/nodetest
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
