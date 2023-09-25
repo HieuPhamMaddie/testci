@@ -28,17 +28,16 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-  test:
+  say_hello:
+    docker:
+     - image: cimg/base:2022.05
     steps:
-      - run:
-          name: Run tests
-          command: |
-            echo "Running tests..."
+      - run: echo "Say hello to YAML!"
 workflows:
   commit:
     jobs:
       - build-and-push:
           context: my-docker-credentials
-      - test:
+      - say_hello:
           requires:
             - build-and-push
