@@ -1,6 +1,7 @@
 version: '2.1'
 orbs:
   docker: circleci/docker@2.3.0
+
 jobs:
   build-and-push:
     executor: docker/docker
@@ -8,17 +9,28 @@ jobs:
       - setup_remote_docker
       - checkout
       - docker/check
+      - run:
+          name: Set Docker Image Tag
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              DOCKER_IMAGE_TAG="dev-${CIRCLE_BUILD_NUM}"
+            else
+              DOCKER_IMAGE_TAG="prod-${CIRCLE_BUILD_NUM}"
+            fi
+            echo "DOCKER_IMAGE_TAG=${DOCKER_IMAGE_TAG}" >> $BASH_ENV
       - docker/build:
           image: hieuphamdn93/nodetest
-          tag: latest
+          tag: $DOCKER_IMAGE_TAG
       - docker/push:
           digest-path: /tmp/digest.txt
           image: hieuphamdn93/nodetest
-          tag: latest
+          tag: $DOCKER_IMAGE_TAG
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
+
 workflows:
   commit:
     jobs:
-      - build-and-push
+      - build-and-push:
+          context: my-docker-credentials
