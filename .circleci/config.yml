@@ -28,9 +28,17 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-
+  test:
+    steps:
+      - run:
+          name: Run tests
+          command: |
+            echo "Running tests..."
 workflows:
   commit:
     jobs:
       - build-and-push:
           context: my-docker-credentials
+      - test:
+          requires:
+            - build-and-push
