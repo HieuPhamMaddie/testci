@@ -16,20 +16,18 @@ spec:
     spec:
       containers:
       - name: node-deployment
-        image: hieuphamdn93/nodetest:latest
+        image: hieuphamdn93/nodetest:prod-13
         ports:
         - containerPort: 3000
-
 ---
 apiVersion: v1
 kind: Service
-type: LoadBalancer
 metadata:
   name: node-service
 spec:
+  type: LoadBalancer
   selector:
     app: node-deployment
   ports:
   - port: 3000
     targetPort: 3000
-```

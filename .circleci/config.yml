@@ -1,43 +1,29 @@
-version: '2.1'
+version: 2.1
 orbs:
-  docker: circleci/docker@2.3.0
+  k8s: digitalocean/k8s@0.1.1
 
 jobs:
-  build-and-push:
-    executor: docker/docker
+  deploy:
+    executor: k8s/default
     steps:
-      - setup_remote_docker
-      - checkout
-      - docker/check
+      - setup_remote_docker:
+          version: 20.10.7
+      - k8s/install
+      - k8s/use-context:
+          context-name: my-k8s-context
+      - k8s/configure-kubectl
+      - checkout # Đảm bảo sao chép toàn bộ nội dung của kho lưu trữ
       - run:
-          name: Set Docker Image Tag
+          name: Deploy to Kubernetes
           command: |
-            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              DOCKER_IMAGE_TAG="dev-${CIRCLE_BUILD_NUM}"
-            else
-              DOCKER_IMAGE_TAG="prod-${CIRCLE_BUILD_NUM}"
-            fi
-            echo "DOCKER_IMAGE_TAG=${DOCKER_IMAGE_TAG}" >> $BASH_ENV
-      - docker/build:
-          image: hieuphamdn93/nodetest
-          tag: $DOCKER_IMAGE_TAG
-      - docker/push:
-          digest-path: /tmp/digest.txt
-          image: hieuphamdn93/nodetest
-          tag: $DOCKER_IMAGE_TAG
-      - run:
-          command: |
-            echo "Digest is: $(</tmp/digest.txt)"
-  say_hello:
-    docker:
-     - image: cimg/base:2022.05
-    steps:
-      - run: echo "Say hello to YAML!"
+            kubectl apply -f infra/deploy.yml
+
 workflows:
-  commit:
+  version: 2
+  deploy_workflow:
     jobs:
-      - build-and-push:
-          context: my-docker-credentials
-      - say_hello:
-          requires:
-            - build-and-push
+      - deploy:
+          filters:
+            branches:
+              only:
+                - main # Thay đổi thành nhánh bạn muốn triển khai
