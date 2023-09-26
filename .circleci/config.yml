@@ -6,18 +6,10 @@ jobs:
   deploy:
     executor: k8s/default
     steps:
-      - setup_remote_docker:
-          version: 20.10.7
-      - k8s/install
-      - k8s/use-context:
-          context-name: my-k8s-context
-      - k8s/configure-kubectl
-      - checkout # Đảm bảo sao chép toàn bộ nội dung của kho lưu trữ
-      - run:
-          name: Deploy to Kubernetes
-          command: |
-            kubectl apply -f infra/deploy.yml
-
+      - install
+      - initialize:
+          cluster: do-k8s-practice
+          digitalocean-access-token: DIGITALOCEAN_ACCESS_TOKEN
 workflows:
   version: 2
   deploy_workflow:
