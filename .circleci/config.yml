@@ -1,16 +1,57 @@
+# This code is licensed from CircleCI to the user under the MIT license.
+# See here for details: https://circleci.com/developer/orbs/licensing
+# This code is licensed from CircleCI to the user under the MIT license. See
+# https://circleci.com/orbs/registry/licensing for details.
 version: 2.1
+description: DigitalOcean Kubernetes Engine Orb
+
+# Orb Dependencies
 orbs:
-  k8s: digitalocean/k8s@0.1.1
+  doctl: digitalocean/cli@0.1.1
+  k8s: circleci/kubernetes@0.1.0
+
+commands:
+  install:
+    description: "Install `doctl` and `kubectl` if not already installed."
+    steps:
+      - doctl/install
+      - k8s/install
+  initialize:
+    description: "Initialize kubeconfig to connect to DigitalOcean Kubernetes Engine"
+    parameters:
+      cluster:
+        description: "The Kubernetes cluster name."
+        type: string
+      digitalocean-access-token:
+        default: DIGITALOCEAN_ACCESS_TOKEN
+        description: The access token to connect DigitalOcean
+        type: env_var_name
+    steps:
+      - doctl/initialize:
+          digitalocean-access-token: <<parameters.digitalocean-access-token>>
+      - run: |
+          doctl kubernetes cluster kubeconfig save <<parameters.cluster>>
 
 jobs:
-  install:
+  install_and_initialize_cli:
+    description: |
+      Install doctl and initialize to connect to DigitalOcean
+    executor: <<parameters.executor>>
+    parameters:
+      cluster:
+        description: "The Kubernetes cluster name."
+        type: string
+      digitalocean-access-token:
+        default: DIGITALOCEAN_ACCESS_TOKEN
+        description: The access token to connect DigitalOcean
+        type: env_var_name
+      executor:
+        default: default
+        description: |
+          Executor to use for this job. Defaults to this orb's default executor.
+        type: executor
     steps:
-      - k8s/install
-workflows:
-  install_tools:
-    jobs:
-      - install:
-          filters:
-            branches:
-              only:
-                - main # Thay đổi thành nhánh bạn muốn triển khai
+      - install
+      - initialize:
+          cluster: <<parameters.cluster>>
+          digitalocean-access-token: <<parameters.digitalocean-access-token>>
