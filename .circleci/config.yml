@@ -6,10 +6,7 @@ jobs:
   deploy:
     executor: k8s/default
     steps:
-      - install
-      - initialize:
-          cluster: do-k8s-practice
-          digitalocean-access-token: DIGITALOCEAN_ACCESS_TOKEN
+      - k8s/install
 workflows:
   deploy_workflow:
     jobs:
