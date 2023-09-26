@@ -54,8 +54,12 @@ jobs:
       - install
       - initialize:
           cluster: <<parameters.cluster>>
-          digitalocean-access-token: <<parameters.digitalocean-access-token>>
+          digitalocean-access-token: DIGITALOCEAN_ACCESS_TOKEN
 workflows:
   install_and_initialize_cli:
     jobs:
-      - install_and_initialize_cli
+      - install_and_initialize_cli:
+          cluster: do-k8s-practice
+          digitalocean-access-token: DIGITALOCEAN_ACCESS_TOKEN
+          executor: default
+
