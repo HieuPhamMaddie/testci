@@ -39,7 +39,7 @@ jobs:
     executor: <<parameters.executor>>
     parameters:
       cluster:
-        description: "The Kubernetes cluster name."
+        description: "do-k8s-practice"
         type: string
       digitalocean-access-token:
         default: DIGITALOCEAN_ACCESS_TOKEN
@@ -55,3 +55,11 @@ jobs:
       - initialize:
           cluster: <<parameters.cluster>>
           digitalocean-access-token: <<parameters.digitalocean-access-token>>
+workflows:
+  install_and_initialize_cli:
+    jobs:
+      - install_and_initialize_cli:
+          cluster: do-k8s-practice
+          digitalocean-access-token: <<parameters.digitalocean-access-token>>
+          executor: default
+
