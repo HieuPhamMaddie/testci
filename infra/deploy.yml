@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: node-deployment
-          image: hieuphamdn93/nodetest:$TAG
+          image: hieuphamdn93/nodetest:$GIT_BRANCH-$TAG
           ports:
             - containerPort: 3000
 
