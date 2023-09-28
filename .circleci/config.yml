@@ -47,6 +47,7 @@ jobs:
           name: Your Kubernetes Commands
           command: |
             kubectl apply -f ./infra/deploy.yml
+            kubectl get pods
 workflows:
   commit:
     jobs:
