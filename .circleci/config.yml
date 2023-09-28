@@ -50,8 +50,8 @@ jobs:
       - run:
           name: Your Kubernetes Commands
           command: |
-            COMMIT_SHA1=$CIRCLE_SHA1
-            export COMMIT_SHA1=$COMMIT_SHA1
+            TAG=$DOCKER_IMAGE_TAG
+            export TAG=$TAG
             envsubst < ./infra/deploy.yml | kubectl apply -f -
 workflows:
   commit:
