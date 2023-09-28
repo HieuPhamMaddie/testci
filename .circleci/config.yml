@@ -29,11 +29,11 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-    deploy-app:
-      docker:
-        - image: cimg/base:2023.09
-      steps:
-        - checkout
+  deploy-app:
+    docker:
+      - image: cimg/base:2023.09
+    steps:
+      - checkout
       - setup_remote_docker
       - doctl/install
       - k8s/install
