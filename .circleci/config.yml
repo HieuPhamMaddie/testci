@@ -10,6 +10,10 @@ jobs:
       - setup_remote_docker
       - checkout
       - docker/check
+      - persist_to_workspace:
+          root: .
+          paths:
+            - bash.env
       - run:
           name: Set Docker Image Tag
           command: |
@@ -39,6 +43,8 @@ jobs:
       - k8s/install
       - doctl/initialize:
           digitalocean-access-token: DIGITALOCEAN_ACCESS_TOKEN
+      - attach_workspace:
+          at: .
       - run:
           name: Save Kubernetes Config
           command: |
