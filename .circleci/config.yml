@@ -51,10 +51,12 @@ jobs:
       - run:
           name: Your Kubernetes Commands
           command: |
-            TAG=$CIRCLE_SHA1
-            GIT_BRANCH=$CIRCLE_BRANCH
-            export TAG=$TAG
-            export GIT_BRANCH=$GIT_BRANCH
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              DOCKER_IMAGE_TAG="dev-${CIRCLE_SHA1}"
+            else
+              DOCKER_IMAGE_TAG="prod-${CIRCLE_SHA1}"
+            fi
+            export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG
             envsubst < ./infra/deploy.yml | kubectl apply -f -
 workflows:
   commit:
