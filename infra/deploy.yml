@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: node-deployment
-        image: hieuphamdn93/nodetest:prod-13
+        image: hieuphamdn93/nodetest
         ports:
         - containerPort: 3000
 ---
