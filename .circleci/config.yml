@@ -51,7 +51,7 @@ jobs:
           name: Your Kubernetes Commands
           command: |
             export IMG_TAG=${DOCKER_IMAGE_TAG}
-            envsubst < ./infra/deploy.yml | kubectl apply -f -
+            echo $IMG_TAG
 workflows:
   commit:
     jobs:
